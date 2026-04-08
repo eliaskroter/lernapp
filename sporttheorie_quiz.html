@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sporttheorie Abi Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f11;
+  --surface: #17191d;
+  --surface2: #1f2228;
+  --border: #2a2d35;
+  --text: #f0f0ee;
+  --muted: #6b6f7a;
+  --accent: #c8f060;
+  --accent-dim: #8aaa30;
+  --red: #ff5c5c;
+  --red-dim: #3a1a1a;
+  --green: #52d88a;
+  --green-dim: #0e2a1a;
+  --blue: #60a8f0;
+  --blue-dim: #0e1e3a;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.app { width: 100%; max-width: 680px; }
+
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.logo span { color: var(--accent); }
+.stats {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.stat-val { color: var(--text); font-weight: 500; }
+
+/* PROGRESS */
+.progress-wrap { margin-bottom: 2rem; }
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.progress-track {
+  height: 4px;
+  background: var(--surface2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* CATEGORY BADGE */
+.cat-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  margin-bottom: 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* QUESTION CARD */
+.question-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 1rem;
+}
+.question-num {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.question-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* OPTIONS */
+.options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem; }
+
+.option {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  text-align: left;
+  width: 100%;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.option:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--surface2);
+  transform: translateX(3px);
+}
+.option:disabled { cursor: default; transform: none; }
+.option.correct {
+  border-color: var(--green);
+  background: var(--green-dim);
+}
+.option.wrong {
+  border-color: var(--red);
+  background: var(--red-dim);
+}
+.option.missed {
+  border-color: var(--green);
+  background: var(--green-dim);
+  opacity: 0.6;
+}
+
+.opt-letter {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.option.correct .opt-letter { background: var(--green); border-color: var(--green); color: #0e2a1a; }
+.option.wrong .opt-letter { background: var(--red); border-color: var(--red); color: #fff; }
+.option.missed .opt-letter { background: var(--green); border-color: var(--green); color: #0e2a1a; }
+
+/* EXPLANATION */
+.explanation {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  display: none;
+}
+.explanation strong { color: var(--text); }
+.explanation.show { display: block; animation: fadeIn 0.2s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* NEXT BTN */
+.next-btn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--accent);
+  color: #0e0f11;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: none;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: 0.3px;
+}
+.next-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.next-btn:active { transform: translateY(0); }
+.next-btn.show { display: block; animation: fadeIn 0.2s ease; }
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.filter-btn {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: #0e0f11; font-weight: 500; }
+
+/* RESULT SCREEN */
+.result-screen {
+  text-align: center;
+  padding: 3rem 1rem;
+  display: none;
+}
+.result-screen.show { display: block; animation: fadeIn 0.4s ease; }
+.result-score {
+  font-family: 'Syne', sans-serif;
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.result-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.result-grade {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+}
+.result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  border: none;
+  background: var(--accent);
+  color: #0e0f11;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+/* QUIZ AREA */
+#quiz-area { display: block; }
+
+/* STREAK */
+.streak-badge {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+.streak-badge.show { display: flex; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="logo">Sport<span>Abi</span></div>
+    <div class="stats">
+      <div>✓ <span class="stat-val" id="stat-correct">0</span></div>
+      <div>✗ <span class="stat-val" id="stat-wrong">0</span></div>
+      <div>🔥 <span class="stat-val" id="stat-streak">0</span></div>
+    </div>
+  </div>
+
+  <div class="filter-bar" id="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('all',this)">Alle</button>
+    <button class="filter-btn" onclick="setFilter('bio',this)">Sportbiologie</button>
+    <button class="filter-btn" onclick="setFilter('bew',this)">Bewegung</button>
+    <button class="filter-btn" onclick="setFilter('ges',this)">Gesellschaft</button>
+    <button class="filter-btn" onclick="setFilter('wrong',this)">Falsche</button>
+  </div>
+
+  <div id="quiz-area">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="prog-label">Frage 1 von 60</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="streak-badge" id="streak-badge">🔥 <span id="streak-text">3er Serie!</span></div>
+
+    <div class="cat-badge" id="cat-badge">Kategorie</div>
+
+    <div class="question-card">
+      <div class="question-num" id="q-num">FRAGE 01</div>
+      <div class="question-text" id="q-text">Frage wird geladen...</div>
+    </div>
+
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">Weiter →</button>
+  </div>
+
+  <div class="result-screen" id="result-screen">
+    <div class="result-score" id="res-score">0%</div>
+    <div class="result-label">Ergebnis</div>
+    <div class="result-grade" id="res-grade"></div>
+    <div class="result-actions">
+      <button class="btn-secondary" onclick="restartWrong()">Nur Falsche wiederholen</button>
+      <button class="btn-primary" onclick="restartAll()">Nochmal von vorne</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  // SPORTBIOLOGIE & PHYSIOLOGIE
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was versteht man unter Superkompensation?",
+   opts:["Der Körper erholt sich genau auf das Ausgangsniveau nach einer Belastung","Nach einer Belastung und Erholung steigt die Leistungsfähigkeit über das Ausgangsniveau","Superkompensation beschreibt die maximale Erschöpfung des Körpers","Der Körper passt sich nur bei sehr hohen Intensitäten an"],
+   a:1, exp:"Superkompensation: Nach Belastung sinkt die Leistungsfähigkeit, steigt dann in der Erholungsphase über das Ausgangsniveau — das ist die Grundlage für Trainingsfortschritt."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Welche Muskelfasertypen gibt es und was charakterisiert den Typ I (ST-Faser)?",
+   opts:["Typ I = schnell zuckend, anaerob, ermüdet schnell","Typ I = langsam zuckend, aerob, hohe Ausdauer, ermüdet langsam","Typ I = mittlere Ermüdbarkeit, gemischter Stoffwechsel","Typ I = ausschließlich für Maximalkraftleistungen geeignet"],
+   a:1, exp:"ST-Fasern (Slow-Twitch) = Typ I: langsam, hohe Ausdauerkapazität, viele Mitochondrien, aerober Stoffwechsel. Ideal für Langzeitausdauer."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Wie wird Energie beim alaktazid-anaeroben Weg bereitgestellt?",
+   opts:["Durch Verbrennung von Fetten ohne Sauerstoff","Durch Spaltung von Kreatinphosphat (KP) — kein Laktat, kein Sauerstoff","Durch Glykolyse mit Laktatbildung","Durch oxidative Phosphorylierung im Mitochondrium"],
+   a:1, exp:"Alaktazid-anaerob: KP-Spaltung liefert ATP sofort, ohne O₂ und ohne Laktat. Dauert nur ca. 6–10 Sekunden — typisch für Sprintstart oder Weitsprung."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Ab welcher Belastungsdauer dominiert die aerobe Energiebereitstellung?",
+   opts:["Ab ca. 10 Sekunden","Ab ca. 30 Sekunden","Ab ca. 2–3 Minuten","Ab ca. 10 Minuten"],
+   a:2, exp:"Nach ca. 2–3 Minuten Belastung liefert der aerobe Stoffwechsel den Hauptanteil der Energie. Darunter dominiert die anaerobe Glykolyse (laktazid)."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was ist eine muskuläre Dysbalance?",
+   opts:["Eine genetisch bedingte Muskelschwäche","Ein Ungleichgewicht zwischen Agonist und Antagonist, das zu Fehlhaltungen führt","Eine übermäßige Muskelhypertrophie durch Doping","Eine Verletzung des Muskelbauchs"],
+   a:1, exp:"Muskuläre Dysbalancen entstehen, wenn antagonistische Muskelgruppen unterschiedlich stark / dehnfähig sind. Folge: Fehlhaltungen, erhöhtes Verletzungsrisiko."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was beschreibt VO₂max?",
+   opts:["Die maximale Herzfrequenz bei Belastung","Die maximale Sauerstoffaufnahme pro Minute — Maß für aerobe Ausdauerleistung","Den maximalen Blutdruck unter Belastung","Die maximale Atemfrequenz pro Minute"],
+   a:1, exp:"VO₂max = maximale Sauerstoffaufnahme (ml/min/kg). Wichtigstes Maß für aerobe Ausdauerkapazität. Ausdauertraining erhöht die VO₂max signifikant."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Welche Kontraktionsform liegt vor, wenn der Muskel Kraft erzeugt, sich aber nicht verkürzt?",
+   opts:["Konzentrische Kontraktion","Exzentrische Kontraktion","Isometrische Kontraktion","Isotonische Kontraktion"],
+   a:2, exp:"Isometrisch = gleiche Länge. Muskel entwickelt Spannung ohne Längenänderung, z. B. Wand schieben, Gleichgewichtshalten. Kein Bewegungseffekt, aber hohe Kraftentwicklung."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was passiert im Herz durch langfristiges Ausdauertraining?",
+   opts:["Das Herz verkleinert sich und arbeitet effizienter","Das Schlagvolumen steigt, die Ruheherzfrequenz sinkt — das sog. Sportherz entwickelt sich","Die Herzfrequenz steigt dauerhaft an","Das Herz wird steifer und pumpt mehr Blut pro Schlag"],
+   a:1, exp:"Sportherz: exzentrische Hypertrophie (Kammer vergrößert), höheres Schlagvolumen, niedrigere Ruheherzfrequenz (manchmal unter 40/min bei Ausdauersportlern)."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was sind Trainingsprinzipien?",
+   opts:["Wissenschaftlich begründete Grundsätze, die die Planung und Durchführung von Training leiten","Staatlich vorgeschriebene Trainingsregeln für den Schulsport","Persönliche Erfahrungswerte des Trainers","Empfehlungen der WHO für Bewegungszeit pro Woche"],
+   a:0, exp:"Trainingsprinzipien (z.B. progressiver Belastungssteigerung, Wechsel von Belastung & Erholung, Spezialisierung) sind wissenschaftlich fundierte Leitlinien für die Trainingsplanung."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was versteht man unter Kraftausdauer?",
+   opts:["Die Fähigkeit, einen maximalen Kraftstoß zu erzeugen","Die Fähigkeit, Kraft über einen längeren Zeitraum aufrechtzuerhalten","Die Fähigkeit, bei hoher Geschwindigkeit Kraft zu entwickeln","Die Fähigkeit, den Muskel vollständig zu dehnen"],
+   a:1, exp:"Kraftausdauer = Fähigkeit, bei länger dauernder Belastung möglichst wenig Kraftverlust zu erleiden, z. B. Rudern, Kanu, Klettern."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was sind Belastungsnormativa im Training?",
+   opts:["Grenzwerte für gefährliche Belastungen","Steuerungsgrößen des Trainings: Intensität, Umfang, Dichte, Dauer und Häufigkeit","Empfohlene Mindestbelastungen für Schüler","Die maximale Herzfrequenz bei verschiedenen Sportarten"],
+   a:1, exp:"Belastungsnormativa = Steuerungsgrößen: Intensität (Stärke), Umfang (Menge), Dichte (Verhältnis Belastung/Erholung), Dauer (Zeit), Häufigkeit (Einheiten/Woche)."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was kennzeichnet FT-Fasern (Fast-Twitch, Typ II)?",
+   opts:["Hohe Ausdauerkapazität, viele Mitochondrien, rot gefärbt","Schnell zuckend, hohe Kraft, anaerober Stoffwechsel, ermüden schnell","Mittlere Kontraktionsgeschwindigkeit, gemischt aerob/anaerob","Ausschließlich für Ausdauerbelastungen geeignet"],
+   a:1, exp:"FT-Fasern = Typ II: schnell, kraftvoll, wenige Mitochondrien, anaerob dominant. Ermüden schnell. Typisch für Sprinter, Gewichtheber."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was versteht man unter dem Prinzip der progressiven Belastungssteigerung?",
+   opts:["Training muss immer gleich intensiv bleiben","Der Trainingsreiz muss mit zunehmender Leistungsfähigkeit gesteigert werden","Man beginnt mit hohen Intensitäten und reduziert diese","Pausen werden mit der Zeit kürzer"],
+   a:1, exp:"Progressive Belastungssteigerung: Weil der Körper sich anpasst, müssen Reize zunehmend gesteigert werden (mehr Gewicht, Volumen, Intensität), sonst kein weiterer Fortschritt."},
+
+  // BEWEGUNGSWISSENSCHAFT
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was beschreibt das Drei-Phasen-Modell nach Meinel?",
+   opts:["Drei Trainingsphasen: Aufwärmen, Hauptteil, Abwärmen","Drei Lernphasen: Grobkoordination, Feinkoordination, Stabilisierung","Drei biomechanische Prinzipien der Kraftübertragung","Drei Analysemethoden: Video, Foto, Beobachtung"],
+   a:1, exp:"Drei-Phasen-Modell: 1. Grobkoordination (grober Ablauf), 2. Feinkoordination (verfeinert, weniger Fehler), 3. Stabilisierung (automatisiert, stabil unter Druck)."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was ist der Unterschied zwischen zyklischen und azyklischen Bewegungen?",
+   opts:["Zyklisch = schnell, azyklisch = langsam","Zyklisch = wiederholende gleichartige Phasen (Laufen), azyklisch = einmalige Bewegungsfolge (Weitsprung)","Zyklisch = mit Geräten, azyklisch = ohne Geräte","Zyklisch = Ausdauer, azyklisch = Kraft"],
+   a:1, exp:"Zyklisch: Phasen wiederholen sich rhythmisch (Laufen, Schwimmen, Radfahren). Azyklisch: Bewegung läuft einmalig ab (Wurf, Sprung, Schlag)."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Welches biomechanische Prinzip besagt, dass die Endgeschwindigkeit durch optimale zeitliche Koordination der Teilbewegungen maximiert wird?",
+   opts:["Prinzip der Anfangskraft","Prinzip der optimalen Beschleunigung","Prinzip der Koordination der Teilbewegungen","Prinzip der Gegenwirkung"],
+   a:2, exp:"Koordinationsprinzip (nach Hochmuth): Teilbewegungen werden zeitlich so koordiniert, dass jede folgende beginnt, wenn die vorherige ihre Maximalgeschwindigkeit erreicht hat — z. B. Speerwurf."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was ist qualitative Bewegungsanalyse?",
+   opts:["Analyse mit exakten Messdaten wie Kraft und Geschwindigkeit","Beurteilung der Bewegungsqualität nach Merkmalen wie Rhythmus, Fluss und Präzision ohne Messinstrumente","Analyse der Trainingseffekte über mehrere Wochen","Bewertung der sportlichen Leistung im Wettkampf"],
+   a:1, exp:"Qualitative Analyse: Beurteilung der Bewegung nach Merkmalen wie Rhythmus, Fluss, Präzision, Körperspannung — ohne exakte Messtechnik, z. B. durch Beobachtungsbogen."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was sind Analysatoren im motorischen Lernprozess?",
+   opts:["Computerprogramme zur Videoauswertung","Sensorische Systeme (visuell, vestibulär, kinästhetisch) die Informationen aufnehmen und verarbeiten","Trainingswissenschaftliche Bewertungskategorien","Modelle zur Beschreibung von Trainingszyklen"],
+   a:1, exp:"Analysatoren = sensorische Systeme: visuell (Auge), vestibulär (Gleichgewicht), kinästhetisch (Muskel-/Gelenkgefühl), taktil (Tastsinn). Liefern Feedback für die Bewegungssteuerung."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was beschreibt das NEUMAIER-Modell?",
+   opts:["Ein Modell der Herzfrequenzsteuerung im Ausdauertraining","Ein Modell zu Druckbedingungen in Sportspielen: Zeit-, Präzisions-, Komplexitäts-, Situations- und Belastungsdruck","Ein biomechanisches Modell der Kraftübertragung","Ein Modell zur Beschreibung motorischer Lernphasen"],
+   a:1, exp:"NEUMAIER-Modell: In Sportspielen wirken 5 Druckbedingungen auf den Sportler: Zeitdruck, Präzisionsdruck, Komplexitätsdruck, Situationsdruck, Belastungsdruck."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was versteht man unter Motorik als Regelkreis?",
+   opts:["Motorisches Lernen folgt festen Regeln ohne Rückmeldung","Bewegungssteuerung als geschlossenes System: Sollwert, Istwert, Vergleich und Korrektur durch Feedback","Motorische Fähigkeiten werden nur durch Wiederholung entwickelt","Ein Trainingsplan mit festgelegten Wiederholungszahlen"],
+   a:1, exp:"Regelkreis: Sollwert (geplante Bewegung) wird mit Istwert (ausgeführte Bewegung) verglichen. Abweichungen werden durch Feedback korrigiert — Grundlage der Bewegungssteuerung."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"In welcher Lernphase ist eine Bewegung automatisiert und unter Druckbedingungen stabil?",
+   opts:["Grobkoordination","Feinkoordination","Stabilisierung / Automatisierung","Variabilisierung"],
+   a:2, exp:"In der Stabilisierungsphase (3. Phase) ist die Bewegung weitgehend automatisiert: Sie läuft unbewusst ab, ist stabil unter Wettkampfdruck und variabel anwendbar."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was ist der Unterschied zwischen translatorischer und rotatorischer Bewegung?",
+   opts:["Translatorisch = im Wasser, rotatorisch = an Land","Translatorisch = geradlinige Ortsveränderung, rotatorisch = Drehbewegung um eine Achse","Translatorisch = schnell, rotatorisch = langsam","Translatorisch = Beine, rotatorisch = Arme"],
+   a:1, exp:"Translatorisch: Körperschwerpunkt bewegt sich geradlinig (Laufen, Gleiten). Rotatorisch: Drehbewegung um eine Achse (Salto, Pirouette, Diskuswurf)."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was sind qualitative Bewegungsmerkmale (nach Meinel/Schnabel)?",
+   opts:["Geschwindigkeit, Kraft, Ausdauer und Beweglichkeit","Fluss, Rhythmus, Präzision, Körperspannung, Raumorientierung — beschreibende Merkmale der Bewegungsqualität","Phasen motorischen Lernens","Biomechanische Kenngrößen wie Winkel und Geschwindigkeit"],
+   a:1, exp:"Qualitative Bewegungsmerkmale nach Meinel/Schnabel: Bewegungsfluss, Rhythmus, Präzision (Genauigkeit), Körperspannung, Raumorientierung. Basis der qualitativen Analyse."},
+
+  // GESELLSCHAFT & GESUNDHEIT
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was versteht man unter dem 'Sport-Medien-Wirtschaft-Dreieck'?",
+   opts:["Drei unabhängige Bereiche des Sports ohne Wechselwirkung","Die wechselseitige Abhängigkeit von Spitzensport, Medien und Wirtschaft zur gegenseitigen Gewinnmaximierung","Eine staatliche Regulierungsbehörde für Sport","Ein Trainingsmodell für Mannschaftssportarten"],
+   a:1, exp:"Das Dreieck beschreibt, wie Sport, Medien und Wirtschaft voneinander profitieren: Sport braucht Sponsoren und Sendezeit, Medien brauchen Quoten, Wirtschaft braucht Werbeplattformen."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was ist die WADA und wofür steht die Abkürzung?",
+   opts:["Weltverband der Athleten — Interessenvertretung der Sportler","World Anti-Doping Agency — internationale Organisation zur Dopingbekämpfung","Wissenschaftliche Arbeitsgruppe für Dopinganalytik","Weltgesundheitsorganisation für Athleten"],
+   a:1, exp:"WADA = World Anti-Doping Agency, gegründet 1999. Erstellt die Verbotsliste, koordiniert Dopingkontrollen und forscht zu Nachweismethoden weltweit."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was sind Funktionen des Sports in der Gesellschaft?",
+   opts:["Sport hat ausschließlich Gesundheitsfunktionen","Sport hat u. a. Sozialisations-, Gesundheits-, Leistungs-, Integrations- und Unterhaltungsfunktionen","Sport dient ausschließlich der wirtschaftlichen Wertschöpfung","Sport hat keine gesellschaftliche Relevanz mehr"],
+   a:1, exp:"Funktionen des Sports: Gesundheit, Sozialisation, Integration, Leistung, Entspannung, Unterhaltung, Bildung. Dysfunktionen: Doping, Gewalt, Kommerzialisierung, Ausgrenzung."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was versteht man unter Ernährungssubstitution im Sport?",
+   opts:["Vollständige Ernährungsumstellung auf vegane Kost","Die gezielte Ergänzung der normalen Ernährung durch Nahrungsergänzungsmittel (z. B. Protein, Kreatin, Vitamine)","Das Ersetzen von Mahlzeiten durch Sportgetränke","Ernährungsverzicht vor Wettkämpfen"],
+   a:1, exp:"Ernährungssubstitution: Ergänzung durch Supplemente wie Proteinpulver, Kreatin, BCAA, Vitamine. Grenze zum Doping ist fließend — entscheidend ist die Substanz und ihre Wirkung."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was ist Blutdoping und warum ist es verboten?",
+   opts:["Blutdoping = Blutabnahme zur Analyse — erlaubt und medizinisch notwendig","Blutdoping = Erhöhung der Erythrozytenzahl durch Eigenblut, Fremdblut oder EPO — steigert Ausdauer, gesundheitsgefährdend","Blutdoping = Eisensubstitution bei Mangelanämie — erlaubt","Blutdoping = Blutverdünnung zur Leistungssteigerung"],
+   a:1, exp:"Blutdoping erhöht die Anzahl roter Blutkörperchen → mehr O₂-Transport → bessere Ausdauer. Verboten wegen Gesundheitsgefahr (Thrombosen, Schlaganfall) und unfairem Vorteil."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was ist der Unterschied zwischen organisiertem und nicht-organisiertem Sport?",
+   opts:["Kein Unterschied — beides ist Sport","Organisierter Sport = Vereins-/Verbandssport mit Struktur, Mitgliedschaft, Wettkampf; nicht-organisiert = informeller Freizeitsport ohne institutionellen Rahmen","Organisierter Sport = Profisport, nicht-organisiert = Amateursport","Organisierter Sport = teuer, nicht-organisiert = kostenlos"],
+   a:1, exp:"Organisierter Sport: Verein, Verband, Ligasystem, Mitgliedschaft, Trainer. Nicht-organisiert: Joggen, Radfahren, Fitness-Studio, Streetball — ohne Vereinsstruktur. Trend zu Letzterem wächst."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was sind Makronährstoffe und welche gibt es?",
+   opts:["Vitamine und Mineralstoffe","Kohlenhydrate, Fette und Proteine — Hauptenergielieferanten","Wasser, Elektrolyte und Spurenelemente","Enzyme, Hormone und Aminosäuren"],
+   a:1, exp:"Makronährstoffe: Kohlenhydrate (4 kcal/g), Fette (9 kcal/g), Proteine (4 kcal/g). Im Sport: KH als schnelle Energiequelle, Fette als Langzeitenergielieferant, Proteine für Muskelaufbau."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was ist Leistungsmotivation nach Atkinson?",
+   opts:["Die Motivation, immer gewinnen zu wollen","Das Zusammenspiel von Erfolgsmotiv, Misserfolgsvermeidungsmotiv, Erfolgswahrscheinlichkeit und Anreizwert","Die intrinsische Motivation, Sport zu betreiben","Die Bereitschaft, harte Trainingsbelastungen zu akzeptieren"],
+   a:1, exp:"Atkinson: Handlungstendenz = (Erfolgsmotiv × Erfolgswahrscheinlichkeit × Anreiz) - (Misserfolgsmotiv × Misserfolgswahrscheinlichkeit × neg. Anreiz). Erklärt, warum manche mittelschwere Aufgaben bevorzugen."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was versteht man unter einem Gesundheitskonzept im Sinne der WHO?",
+   opts:["Gesundheit = Abwesenheit von Krankheit","Gesundheit = vollständiges körperliches, geistiges und soziales Wohlbefinden, nicht nur die Abwesenheit von Krankheit","Gesundheit = optimale sportliche Leistungsfähigkeit","Gesundheit = normaler BMI und keine Verletzungen"],
+   a:1, exp:"WHO-Definition (1948): Gesundheit ist ein Zustand vollständigen körperlichen, geistigen und sozialen Wohlbefindens — ein mehrdimensionaler Begriff, kein bloßes Fehlen von Krankheit."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was versteht man unter dem Motiv im psychologischen Sinne?",
+   opts:["Ein kurzfristiger Antrieb, der von außen entsteht","Eine relativ stabile Persönlichkeitseigenschaft, die Handlungen in bestimmte Richtungen lenkt","Die Energie, die für sportliche Leistung benötigt wird","Der Wille, ein konkretes Trainingsziel zu erreichen"],
+   a:1, exp:"Motiv = relativ stabile, überdauernde Persönlichkeitsdisposition (z. B. Leistungsmotiv, Anschlussmotiv). Motivation = aktueller Antrieb in einer konkreten Situation (Motiv × Situation)."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was sind häufige Sportverletzungen an Sehnen und Bändern?",
+   opts:["Fraktur und Prellung","Zerrung und Verrenkung","Bänderriss, Sehnenentzündung (Tendinitis), Sehnenriss — durch Überlastung oder akute Traumata","Muskelkater und Muskelkrampf"],
+   a:2, exp:"Sehnen/Bänder: Zerrung, Teilriss, Riss (z. B. Kreuzbandriss, Achillessehnenriss), Tendinitis. Prävention: Aufwärmen, Kräftigung, Technik. Regeneration: PECH-Regel (Pause, Eis, Compression, Hochlagern)."},
+
+  // KOORDINATION
+  {cat:"bio", catLabel:"Koordination",
+   q:"Was sind koordinative Fähigkeiten nach Meinel/Schnabel?",
+   opts:["Kraft, Ausdauer, Schnelligkeit und Beweglichkeit","Gleichgewicht, Rhythmisierung, Orientierung, Differenzierung, Reaktion, Kopplungsfähigkeit und Umstellungsfähigkeit","Taktik, Technik und Kondition","Ausdauer, Koordination und Flexibilität"],
+   a:1, exp:"7 koordinative Fähigkeiten nach Meinel/Schnabel: Gleichgewicht, Rhythmisierung, räumliche Orientierung, kinästhetische Differenzierung, Reaktion, Kopplung, Umstellung."},
+
+  {cat:"bio", catLabel:"Koordination",
+   q:"Wann ist die sensible Phase für koordinatives Training besonders ausgeprägt?",
+   opts:["Im Erwachsenenalter (25–35 Jahre)","Im Kindes- und frühen Jugendalter (ca. 7–14 Jahre)","Im Seniorenalter (über 60 Jahre)","Im Hochleistungsalter (18–25 Jahre)"],
+   a:1, exp:"Sensible Phase für Koordination: ca. 7–14 Jahre. Das Nervensystem ist plastisch, Bewegungen werden schnell gelernt. Danach nimmt die Lernfähigkeit ab, Training bleibt aber möglich."},
+
+  // BIOMECHANIK
+  {cat:"bew", catLabel:"Biomechanik",
+   q:"Was besagt das biomechanische Prinzip der Anfangskraft?",
+   opts:["Eine Bewegung muss immer aus der Ruhe gestartet werden","Eine vorbereitende Gegenbewegung erzeugt eine elastische Vorspannung, die die nachfolgende Hauptbewegung verstärkt","Die Kraft muss gleichmäßig über die gesamte Bewegung verteilt werden","Je größer die Anfangskraft, desto geringer die Endkraft"],
+   a:1, exp:"Anfangskraft-Prinzip: Durch Vorspannung (Gegenbewegung) wird elastische Energie gespeichert und bei der Hauptbewegung freigegeben — z. B. Ausholen beim Wurf, Absprung beim Hochsprung."},
+
+  {cat:"bew", catLabel:"Biomechanik",
+   q:"Was ist der Unterschied zwischen Kinematik und Dynamik?",
+   opts:["Kinematik = Kraft, Dynamik = Bewegung","Kinematik = Beschreibung der Bewegung (Weg, Geschwindigkeit, Beschleunigung) ohne Kräfte; Dynamik = Analyse der Kräfte, die Bewegungen verursachen","Kinematik = Sportartanalyse, Dynamik = Kraftmessung","Kein Unterschied — beide Begriffe sind synonym"],
+   a:1, exp:"Kinematik: Beschreibt WIE sich etwas bewegt (Weg, Geschwindigkeit, Beschleunigung). Dynamik: Analysiert WARUM (welche Kräfte). Beide zusammen = vollständige biomechanische Analyse."},
+
+  // TAKTIK & PSYCHOLOGIE
+  {cat:"bew", catLabel:"Psychologie",
+   q:"Was versteht man unter psychologischem Training im Sport?",
+   opts:["Psychologische Betreuung nach Sportverletzungen","Systematisches Training mentaler Fähigkeiten wie Konzentration, Visualisierung, Stressregulation und Selbstgespräche","Analyse der Persönlichkeit von Hochleistungssportlern","Motivationsgespräche des Trainers vor dem Wettkampf"],
+   a:1, exp:"Psychologisches Training: Mentale Stärke gezielt trainieren — Konzentrationstraining, Visualisierung (mental rehearsal), Entspannungstechniken (progressive Muskelrelaxation), Selbstgespräche."},
+
+  {cat:"bew", catLabel:"Taktik",
+   q:"Was sind die Grundkomponenten sportlicher Taktik?",
+   opts:["Technik und Kondition","Individual-, Gruppen- und Mannschaftstaktik sowie taktisches Wissen, Denken und Handeln","Regelkenntnis und Schiedsrichterentscheidungen","Fitness und mentale Stärke"],
+   a:1, exp:"Taktische Komponenten: Individual- (Eins-gegen-eins), Gruppen- (Zusammenspiel weniger) und Mannschaftstaktik (alle). Basis: taktisches Wissen, Denken (Situationsanalyse), Handeln (Umsetzung)."},
+
+  // ERNÄHRUNG
+  {cat:"ges", catLabel:"Ernährung & Doping",
+   q:"Was passiert bei einem Kohlenhydratemangel während langer Belastung?",
+   opts:["Der Körper verbrennt sofort Protein","Die Fettverbrennung steigt, Leistung bleibt gleich","Glykogenspeicher leeren sich — Leistungseinbruch ('Hungerast'), Körper greift auf Fette und Proteine zurück","Nichts — KH sind nicht wichtig bei langer Belastung"],
+   a:2, exp:"Leere Glykogenspeicher → 'Bonk' oder 'Hungerast': drastischer Leistungseinbruch. Körper verbrennt Fette (langsamer) und Protein. Prävention: KH-reiche Kost vor/während Wettkampf."},
+
+  {cat:"ges", catLabel:"Ernährung & Doping",
+   q:"Was sind anabole Steroide und wie wirken sie?",
+   opts:["Schmerzstillende Mittel zur Regeneration","Synthetische Testosteron-Derivate, die Muskelaufbau und Proteinsynthese fördern — verboten wegen schwerwiegender Nebenwirkungen","Vitaminpräparate zur Leistungssteigerung","Mittel zur Steigerung der Ausdauerleistung"],
+   a:1, exp:"Anabole Steroide: synthetisches Testosteron. Wirkung: erhöhte Proteinsynthese → Muskelwachstum. Nebenwirkungen: Leberversagen, Herzprobleme, Hormonstörungen, Aggressivität. WADA-verboten."},
+
+  // TRAININGSLEHRE
+  {cat:"bio", catLabel:"Trainingslehre",
+   q:"Was ist der Unterschied zwischen Makrozyklus und Mikrozyklus?",
+   opts:["Makrozyklus = eine Trainingseinheit, Mikrozyklus = ein Jahr","Makrozyklus = mehrwöchiger Trainingsabschnitt (z. B. Vorbereitungsperiode), Mikrozyklus = eine Trainingswoche","Kein Unterschied — beide bezeichnen dasselbe","Makrozyklus = Saisonplanung, Mikrozyklus = einzelne Übung"],
+   a:1, exp:"Makrozyklus: mehrere Wochen bis Monate (z. B. Vorbereitungs-, Wettkampf-, Übergangsperiode). Mikrozyklus: eine Woche. Mesozyklus: mehrere Wochen. Zusammen = Periodisierung."},
+
+  {cat:"bio", catLabel:"Trainingslehre",
+   q:"Was ist ein Anforderungsprofil im Sport?",
+   opts:["Eine Bewerbung für einen Kaderplatz","Eine systematische Beschreibung der konditionellen, koordinativen, technischen und taktischen Anforderungen einer Sportart","Eine Leistungsdiagnose des einzelnen Sportlers","Ein Trainingsplan für eine bestimmte Disziplin"],
+   a:1, exp:"Anforderungsprofil: Beschreibt, welche Fähigkeiten (konditionell, koordinativ, technisch, taktisch) für eine Sportart/Disziplin benötigt werden. Grundlage für sportartenspezifische Trainingsplanung."},
+
+  {cat:"bio", catLabel:"Trainingslehre",
+   q:"Was sind Testgütekriterien?",
+   opts:["Bewertungsmaßstäbe für Schiedsrichterleistungen","Hauptkriterien: Objektivität, Reliabilität, Validität; Nebenkriterien: Normierung, Vergleichbarkeit, Ökonomie","Kriterien für die Zulassung zu Wettkämpfen","Mindestanforderungen für Sportlerhygiene"],
+   a:1, exp:"Hauptgütekriterien: Objektivität (unabhängig vom Tester), Reliabilität (zuverlässig reproduzierbar), Validität (misst, was es messen soll). Nebenkriterien: Normierung, Ökonomie, Nützlichkeit."},
+
+  // GESELLSCHAFT VERTIEFT
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was ist Kommerzialisierung im Sport?",
+   opts:["Die staatliche Förderung von Breitensport","Die zunehmende Ausrichtung des Sports an wirtschaftlichen Interessen: Vermarktung, Sponsoring, TV-Rechte, Merchandising","Die Einführung von Eintrittsgeldern im Schulsport","Die Professionalisierung des Trainerstabs"],
+   a:1, exp:"Kommerzialisierung: Sport wird zur Ware. Folgen: Abhängigkeit von Sponsoren, Spielzeiten nach TV-Wünschen, Athleten als Werbeträger. Chance: Einnahmen für Sport. Risiko: Verlust von Werten."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was versteht man unter Aggression im Sport nach psychologischer Definition?",
+   opts:["Jede intensive körperliche Aktivität","Zielgerichtetes Verhalten mit der Absicht, einem anderen Schaden zuzufügen","Emotionale Erregung ohne Handlungsabsicht","Regelwidriges Verhalten im Wettkampf"],
+   a:1, exp:"Aggression (psychologisch): Verhalten mit Schädigungsabsicht. Unterschied: reaktive Aggression (Frustration) vs. instrumentelle Aggression (Mittel zum Zweck). Gewalt = extreme körperliche Aggression."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was ist das Frustrations-Aggressions-Modell (Dollard et al.)?",
+   opts:["Aggression entsteht nur durch biologische Faktoren","Frustration führt immer zu Aggression — Aggression hat immer Frustration als Ursache","Sport baut Aggressionen ab","Aggression ist eine erlernte Verhaltensweise"],
+   a:1, exp:"Dollard et al. (1939): Frustration → Aggression. Jede Frustration führt zu Aggressionstendenz, jede Aggression hat Frustration als Ursache. Kritik: zu vereinfacht, Aggression hat viele Ursachen."},
+
+  // WEITERE FRAGEN
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was versteht man unter aeroben und anaeroben Schwellen?",
+   opts:["Herzfrequenzgrenzen für maximale und minimale Belastung","Intensitätsgrenzen, ab denen aerobe/anaerobe Energiebereitstellung dominiert — ab anaerober Schwelle steigt Laktat überproportional","Grenzen der Sauerstoffaufnahme","Die maximale Belastungsintensität vor Erschöpfung"],
+   a:1, exp:"Aerobe Schwelle (~2 mmol/l Laktat): Untergrenze, ab der Laktat messbar steigt. Anaerobe Schwelle (~4 mmol/l): Ab hier steigt Laktat überproportional. Grundlage der Ausdauerdiagnostik."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was ist der Aufbau einer Bewegungshandlung?",
+   opts:["Aufwärmen, Hauptbewegung, Abkühlen","Antizipation, Planung, Programmierung, Ausführung, Auswertung (zirkuläres Modell mit Rückkopplung)","Motiv, Ziel, Methode, Ergebnis","Wahrnehmung, Entscheidung, Kraft"],
+   a:1, exp:"Bewegungshandlung: Antizipation (Ziel vorstellen) → Planung → Programmierung (Bewegungsprogramm abrufen) → Ausführung → Auswertung (Feedback) → Anpassung. Zirkulärer Ablauf."},
+
+  {cat:"bio", catLabel:"Trainingslehre",
+   q:"Was ist der Unterschied zwischen Maximalkraft, Schnellkraft und Kraftausdauer?",
+   opts:["Kein Unterschied — alle beschreiben die allgemeine Stärke","Maximalkraft = höchste mögliche Kraft; Schnellkraft = Kraft in kurzer Zeit (Explosivkraft); Kraftausdauer = Kraft über längere Zeit aufrechterhalten","Maximalkraft = Gewichtheben, Schnellkraft = Laufen, Kraftausdauer = Radfahren","Maximalkraft = isometrisch, Schnellkraft = konzentrisch, Kraftausdauer = exzentrisch"],
+   a:1, exp:"Kraftarten: Maximalkraft (1RM, z. B. Gewichtheben), Schnellkraft/Explosivkraft (Impuls in kurzer Zeit, z. B. Sprung), Reaktivkraft (Dehnungs-Verkürzungs-Zyklus), Kraftausdauer (Rudern)."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Was sind Dysfunktionen des Sports?",
+   opts:["Alle positiven gesellschaftlichen Auswirkungen des Sports","Negative Erscheinungen: Doping, Gewalt, Kommerzialisierung, soziale Ausgrenzung, Übertraining, Dopingbetrug","Die Kosten des Spitzensports","Verletzungen durch falsche Technik"],
+   a:1, exp:"Dysfunktionen: Doping, Spielmanipulation, Gewalt (Hooliganism), Kommerzialisierung (Werte gehen verloren), soziale Selektion, Übertraining, Korruption im Sport."},
+
+  {cat:"bio", catLabel:"Sportbiologie",
+   q:"Was passiert physiologisch beim Aufwärmen?",
+   opts:["Die Herzfrequenz wird sofort maximiert","Kerntemperatur steigt, Durchblutung der Muskulatur steigt, Viskosität sinkt, Reaktionsgeschwindigkeit steigt, Verletzungsrisiko sinkt","Muskeln werden erschöpft, um Training effektiver zu machen","Aufwärmen hat keine messbaren physiologischen Effekte"],
+   a:1, exp:"Aufwärmen: Muskeltemperatur ↑, Durchblutung ↑, Enzymaktivität ↑, Muskeldehnbarkeit ↑, Reaktionszeit ↓, HF ↑. Resultat: bessere Leistung, geringeres Verletzungsrisiko."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was ist Feedback im motorischen Lernprozess und welche Arten gibt es?",
+   opts:["Feedback = ausschließlich verbale Kritik des Trainers","Feedback = Information über das Bewegungsergebnis. Arten: intrinsisch (eigene Wahrnehmung) und extrinsisch (von außen: verbal, visuell)","Feedback = Belohnungssystem im Training","Feedback = Wiederholung der Bewegung"],
+   a:1, exp:"Feedback: intrinsisch (kinästhetisch, visuell, auditiv — aus eigenem Körper) und extrinsisch (Trainer, Video, Timing). Wichtig: zeitnah, präzise und dosiert für optimalen Lerneffekt."},
+
+  {cat:"ges", catLabel:"Ernährung & Doping",
+   q:"Wie viel Prozent Kohlenhydrate empfiehlt die Sporternährung für Ausdauersportler?",
+   opts:["10–20%","ca. 50–60% der Gesamtenergiezufuhr","70–80%","unter 30% (Low-Carb-Ansatz)"],
+   a:1, exp:"Allgemeine Empfehlung für Ausdauersportler: ca. 50–60% KH, 25–30% Fette, 15–20% Proteine. Vor Wettkampf 'Carboloading' möglich (70%+ KH zur Glykogenspeicherfüllung)."},
+
+  {cat:"bio", catLabel:"Koordination",
+   q:"Was ist kinästhetische Differenzierungsfähigkeit?",
+   opts:["Die Fähigkeit, im Raum zu navigieren","Die Fähigkeit, Bewegungen präzise zu dosieren und fein abzustimmen — z. B. genaue Kraftdosierung beim Schuss","Die Fähigkeit, schnell auf Signale zu reagieren","Die Fähigkeit, verschiedene Bewegungen gleichzeitig auszuführen"],
+   a:1, exp:"Kinästhetische Differenzierungsfähigkeit: Fähigkeit zur feinen Regulierung von Kraft, Raum und Zeit in Bewegungen. Grundlage für Präzision und 'Fingerspitzengefühl' im Sport."},
+
+  {cat:"bew", catLabel:"Bewegungswiss.",
+   q:"Was sind Korrekturgrundsätze im Techniktraining?",
+   opts:["Immer alle Fehler gleichzeitig korrigieren","Wesentliche Fehler zuerst korrigieren, positiv formulieren, konkret und zeitnah Feedback geben, nicht zu viele Korrekturen auf einmal","Fehler ignorieren und auf Automatisierung warten","Korrektur nur durch Videoanalyse"],
+   a:1, exp:"Korrekturgrundsätze: 1. Wesentlichsten Fehler zuerst. 2. Positiv formulieren. 3. Konkret und anschaulich. 4. Zeitnah. 5. Nicht überfordern. 6. Lösung anbieten, nicht nur Problem benennen."},
+
+  {cat:"ges", catLabel:"Sport & Gesellschaft",
+   q:"Welche Institution ist der Dachverband des deutschen Sports?",
+   opts:["DSB (Deutscher Sportbund)","DOSB (Deutscher Olympischer Sportbund) — entstand 2006 durch Fusion von DSB und NOK","NOK (Nationales Olympisches Komitee)","DFB (Deutscher Fußball-Bund)"],
+   a:1, exp:"DOSB = Deutscher Olympischer Sportbund, gegründet 2006 (Fusion DSB + NOK). Dachverband des deutschen Sports mit über 27 Millionen Mitgliedern. Entsendet Olympiamannschaft."},
+];
+
+let questions = [];
+let current = 0;
+let correct = 0;
+let wrong = 0;
+let streak = 0;
+let wrongIds = new Set();
+let answered = false;
+let activeFilter = 'all';
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  restart();
+}
+
+function buildDeck() {
+  let pool;
+  if (activeFilter === 'wrong') {
+    pool = [...wrongIds].map(i => ALL_QUESTIONS[i]);
+    if (pool.length === 0) pool = [...ALL_QUESTIONS];
+  } else if (activeFilter === 'all') {
+    pool = [...ALL_QUESTIONS];
+  } else {
+    pool = ALL_QUESTIONS.filter(q => q.cat === activeFilter);
+  }
+  // shuffle
+  questions = pool.map((q, i) => ({...q, origIdx: ALL_QUESTIONS.indexOf(q)}))
+    .sort(() => Math.random() - 0.5);
+}
+
+function restart() {
+  current = 0; correct = 0; wrong = 0; streak = 0;
+  updateStats();
+  buildDeck();
+  document.getElementById('result-screen').classList.remove('show');
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('filter-bar').style.display = 'flex';
+  loadQuestion();
+}
+
+function restartAll() {
+  wrongIds.clear();
+  activeFilter = 'all';
+  document.querySelectorAll('.filter-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  restart();
+}
+
+function restartWrong() {
+  activeFilter = 'wrong';
+  restart();
+}
+
+function updateStats() {
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-wrong').textContent = wrong;
+  document.getElementById('stat-streak').textContent = streak;
+}
+
+function loadQuestion() {
+  if (current >= questions.length) { showResult(); return; }
+  answered = false;
+  const q = questions[current];
+  const total = questions.length;
+  const pct = Math.round((current / total) * 100);
+
+  document.getElementById('prog-label').textContent = `Frage ${current+1} von ${total}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('cat-badge').textContent = q.catLabel;
+  document.getElementById('q-num').textContent = `FRAGE ${String(current+1).padStart(2,'0')}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const letters = ['A','B','C','D'];
+  const optDiv = document.getElementById('options');
+  optDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i, q.a, q);
+    optDiv.appendChild(btn);
+  });
+
+  document.getElementById('explanation').className = 'explanation';
+  document.getElementById('explanation').innerHTML = '';
+  document.getElementById('next-btn').classList.remove('show');
+
+  const sb = document.getElementById('streak-badge');
+  if (streak >= 3) {
+    sb.classList.add('show');
+    document.getElementById('streak-text').textContent = `${streak}er Serie! 🔥`;
+  } else { sb.classList.remove('show'); }
+}
+
+function selectAnswer(chosen, correct_idx, q) {
+  if (answered) return;
+  answered = true;
+  const opts = document.querySelectorAll('.option');
+  opts.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correct_idx) btn.classList.add('correct');
+    else if (i === chosen && chosen !== correct_idx) btn.classList.add('wrong');
+  });
+
+  if (chosen === correct_idx) {
+    correct++; streak++;
+    wrongIds.delete(q.origIdx);
+  } else {
+    wrong++; streak = 0;
+    wrongIds.add(q.origIdx);
+  }
+  updateStats();
+
+  const exp = document.getElementById('explanation');
+  exp.innerHTML = `<strong>${chosen === correct_idx ? '✓ Richtig!' : '✗ Falsch.'}</strong> ${q.exp}`;
+  exp.classList.add('show');
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function nextQuestion() {
+  current++;
+  loadQuestion();
+}
+
+function showResult() {
+  document.getElementById('quiz-area').style.display = 'none';
+  document.getElementById('filter-bar').style.display = 'none';
+  const pct = Math.round((correct / questions.length) * 100);
+  document.getElementById('res-score').textContent = pct + '%';
+
+  let grade, color;
+  if (pct >= 95) { grade = '⭐ Note 1 — Exzellent!'; color = '#c8f060'; }
+  else if (pct >= 80) { grade = '🟢 Note 2 — Sehr gut!'; color = '#52d88a'; }
+  else if (pct >= 65) { grade = '🟡 Note 3 — Gut'; color = '#f0c060'; }
+  else if (pct >= 50) { grade = '🟠 Note 4 — Ausreichend'; color = '#f0a060'; }
+  else { grade = '🔴 Noch Lernbedarf — nicht aufgeben!'; color = '#ff5c5c'; }
+
+  const gEl = document.getElementById('res-grade');
+  gEl.textContent = grade;
+  gEl.style.color = color;
+  document.getElementById('result-screen').classList.add('show');
+}
+
+// Start
+buildDeck();
+loadQuestion();
+</script>
+</body>
+</html>
