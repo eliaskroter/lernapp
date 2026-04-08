@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sporttheorie Abitur – Lernplan</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #1a1a1a; padding: 1.5rem 1rem; max-width: 700px; margin: 0 auto; }
+h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.subtitle { font-size: 14px; color: #666; margin-bottom: 1.5rem; }
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.tab { padding: 6px 14px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; cursor: pointer; background: white; color: #555; }
+.tab.active { background: #1a1a1a; color: white; border-color: #1a1a1a; font-weight: 500; }
+.card { background: white; border: 1px solid #e8e8e8; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.badge { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 6px; white-space: nowrap; }
+.b-hoch { background: #FAECE7; color: #993C1D; }
+.b-mittel { background: #FAEEDA; color: #854F0B; }
+.b-wieder { background: #EAF3DE; color: #3B6D11; }
+.b-tag { background: #E6F1FB; color: #185FA5; }
+.b-pflicht { background: #FAECE7; color: #993C1D; }
+.b-opt { background: #FAEEDA; color: #854F0B; }
+.card-title { font-size: 15px; font-weight: 600; }
+.card-date { font-size: 13px; color: #888; margin-left: auto; }
+.topic { border-left: 2px solid #e0e0e0; padding-left: 12px; margin-bottom: 10px; }
+.topic-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.topic-detail { font-size: 13px; color: #555; line-height: 1.5; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; }
+.t-bio { background: #EAF3DE; color: #3B6D11; }
+.t-bew { background: #E6F1FB; color: #185FA5; }
+.t-ges { background: #FAEEDA; color: #854F0B; }
+.t-wdh { background: #EEEDFE; color: #3C3489; }
+.tip { background: #f5f5f3; border-radius: 8px; padding: 0.75rem 1rem; font-size: 13px; color: #555; margin-top: 1rem; }
+.tip strong { color: #1a1a1a; }
+.check-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.check-row input { margin-top: 2px; cursor: pointer; width: 16px; height: 16px; flex-shrink: 0; }
+.check-row label { font-size: 14px; cursor: pointer; line-height: 1.4; }
+.done-label { color: #aaa; text-decoration: line-through; }
+.progress-bar { height: 6px; background: #eee; border-radius: 3px; margin-top: 1rem; overflow: hidden; }
+.progress-fill { height: 100%; background: #1D9E75; border-radius: 3px; transition: width 0.3s; }
+.progress-text { font-size: 13px; color: #666; margin-top: 6px; }
+.view { display: none; }
+.view.active { display: block; }
+</style>
+</head>
+<body>
+
+<h1>Sporttheorie-Abitur — Lernplan</h1>
+<p class="subtitle">13 Tage · Kerncurriculum Niedersachsen · bis 14. April</p>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('plan',this)">Lernplan</button>
+  <button class="tab" onclick="show('themen',this)">Themenfelder</button>
+  <button class="tab" onclick="show('checklist',this)">Checkliste</button>
+</div>
+
+<!-- LERNPLAN -->
+<div id="plan" class="view active">
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-hoch">Hochprio</span><span class="card-title">Tag 1–2: Anatomie & Physiologie</span><span class="card-date">1.–2. April</span></div>
+    <div class="topic"><div class="topic-name">Skelettmuskulatur & Kontraktion</div><div class="topic-detail">Aufbau, Muskelfasertypen (ST/FT), Kontraktionsformen (konzentrisch, exzentrisch, isometrisch), muskuläre Dysbalancen</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+    <div class="topic"><div class="topic-name">Energiebereitstellung</div><div class="topic-detail">Aerob / anaerob-laktazid / anaerob-alaktazid · Resynthesewege je nach Belastungsdauer kennen und zuordnen</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+    <div class="topic"><div class="topic-name">Herz-Kreislauf & Atmung</div><div class="topic-detail">Anatomische Grundlagen + Anpassungsprozesse durch Training (Herzvolumen, VO₂max etc.)</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-hoch">Hochprio</span><span class="card-title">Tag 3–4: Trainingslehre Grundlagen</span><span class="card-date">3.–4. April</span></div>
+    <div class="topic"><div class="topic-name">Trainingsprinzipien & -gesetze</div><div class="topic-detail">Superkompensation, progressive Belastungssteigerung, Wechsel von Belastung & Erholung — mit Grafik einprägen</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+    <div class="topic"><div class="topic-name">Konditionelle Fähigkeiten: Kraft & Ausdauer</div><div class="topic-detail">Erscheinungsformen, Belastungsnormativa, Trainingsmethoden + Adaptationen</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+    <div class="topic"><div class="topic-name">Schnelligkeit & Beweglichkeit</div><div class="topic-detail">Arten, Trainierbarkeit, Methoden, Risiken — kompakt halten</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-hoch">Hochprio</span><span class="card-title">Tag 5: Bewegungsanalyse</span><span class="card-date">5. April</span></div>
+    <div class="topic"><div class="topic-name">Kinematik & Dynamik</div><div class="topic-detail">Translatorisch / rotatorisch, zyklisch / azyklisch, Phasenmodelle nach Meinel</div><div class="tags"><span class="tag t-bew">Bewegungswiss.</span></div></div>
+    <div class="topic"><div class="topic-name">Biomechanische Prinzipien</div><div class="topic-detail">Prinzipien nach Hochmuth — auf konkrete Sportarten anwenden können!</div><div class="tags"><span class="tag t-bew">Bewegungswiss.</span></div></div>
+    <div class="topic"><div class="topic-name">Qualitative Bewegungsmerkmale & Fehleranalyse</div><div class="topic-detail">Fluss, Präzision, Rhythmus etc. + Beobachtungsbogen, Videoanalyse</div><div class="tags"><span class="tag t-bew">Bewegungswiss.</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-hoch">Hochprio</span><span class="card-title">Tag 6: Bewegungslernen & Techniktraining</span><span class="card-date">6. April</span></div>
+    <div class="topic"><div class="topic-name">Phasen motorischen Lernens</div><div class="topic-detail">Grobkoordination → Feinkoordination → Stabilisierung · Einflussfaktoren (Alter, Motivation, Feedback)</div><div class="tags"><span class="tag t-bew">Bewegungswiss.</span></div></div>
+    <div class="topic"><div class="topic-name">Informationsverarbeitung & Regelkreis</div><div class="topic-detail">Mensch als informationsverarbeitendes System · Analysatoren · Motorik als Regelkreis · NEUMAIER-Modell</div><div class="tags"><span class="tag t-bew">Bewegungswiss.</span></div></div>
+    <div class="topic"><div class="topic-name">Methoden & Fehlerkorrektur</div><div class="topic-detail">Lehr-/Lernmethoden, Korrekturgrundsätze, Lernarrangements entwickeln können</div><div class="tags"><span class="tag t-bew">Bewegungswiss.</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-mittel">Mittelprio</span><span class="card-title">Tag 7: Sport & Gesellschaft</span><span class="card-date">7. April</span></div>
+    <div class="topic"><div class="topic-name">Sportbegriff & Funktionen</div><div class="topic-detail">Differenzierter Sportbegriff, Funktionen und Dysfunktionen (Doping, Gewalt, Kommerz)</div><div class="tags"><span class="tag t-ges">Gesellschaft</span></div></div>
+    <div class="topic"><div class="topic-name">Kommerzialisierung & Medien</div><div class="topic-detail">Sport-Wirtschaft-Medien-Dreieck, Professionalisierung, Konsequenzen medialer Vermarktung</div><div class="tags"><span class="tag t-ges">Gesellschaft</span></div></div>
+    <div class="topic"><div class="topic-name">Institutionen & Berufsfeld Sport</div><div class="topic-detail">DSB, IOC, DOSB, organisierter vs. nicht-organisierter Sport, Berufsfelder</div><div class="tags"><span class="tag t-ges">Gesellschaft</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-mittel">Mittelprio</span><span class="card-title">Tag 8: Sport, Ernährung & Doping</span><span class="card-date">8. April</span></div>
+    <div class="topic"><div class="topic-name">Ernährungsgrundlagen</div><div class="topic-detail">Makro- & Mikronährstoffe, Energiebedarf, Flüssigkeitshaushalt, bedarfsangepasste Ernährung</div><div class="tags"><span class="tag t-ges">Gesellschaft</span></div></div>
+    <div class="topic"><div class="topic-name">Ernährungssubstitution & Extremformen</div><div class="topic-detail">Supplements, Low-Carb, vegan, Diäten — kritische Analyse aus mehreren Perspektiven</div><div class="tags"><span class="tag t-ges">Gesellschaft</span></div></div>
+    <div class="topic"><div class="topic-name">Doping</div><div class="topic-detail">Aktuelle WADA-Definition, Wirkstoffe/-methoden (EPO, Anabolika, Blutdoping), historische Entwicklung, Freigabe-Diskussion</div><div class="tags"><span class="tag t-ges">Gesellschaft</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-mittel">Mittelprio</span><span class="card-title">Tag 9: Motive & Koordination</span><span class="card-date">9. April</span></div>
+    <div class="topic"><div class="topic-name">Motive & Leistungsmotivation</div><div class="topic-detail">Motiv vs. Motivation, Leistungsmotivationsmodell (Atkinson), Erfolgsmotivation vs. Misserfolgsvermeidung</div><div class="tags"><span class="tag t-ges">Gesellschaft</span></div></div>
+    <div class="topic"><div class="topic-name">Koordinative Fähigkeiten</div><div class="topic-detail">Modell nach Meinel/Schnabel, Erscheinungsformen, Wechselwirkung mit Analysatoren, altersabhängige Trainierbarkeit</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-mittel">Mittelprio</span><span class="card-title">Tag 10: Gesundheit & Psych. Training</span><span class="card-date">10. April</span></div>
+    <div class="topic"><div class="topic-name">Sport & Gesundheit</div><div class="topic-detail">Häufige Sportverletzungen, Prävention, Regeneration, lebenslanges Gesundheitstraining</div><div class="tags"><span class="tag t-bio">Sportbiologie</span></div></div>
+    <div class="topic"><div class="topic-name">Psychologisches Training (optional)</div><div class="topic-detail">Psychische Faktoren (Emotion, Kognition, Motivation, Wahrnehmung), mentale Techniken im Spitzensport</div><div class="tags"><span class="tag t-bew">Bewegungswiss.</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-wieder">Wiederholung</span><span class="card-title">Tag 11–12: Gesamtwiederholung</span><span class="card-date">11.–12. April</span></div>
+    <div class="topic"><div class="topic-name">Alte Abituraufgaben üben</div><div class="topic-detail">Operatoren trainieren: erläutern, analysieren, beurteilen, entwickeln — mit echten Abi-Aufgaben aus NI</div><div class="tags"><span class="tag t-wdh">Übung</span></div></div>
+    <div class="topic"><div class="topic-name">Schwächste Themenfelder nochmals</div><div class="topic-detail">Gezielt Lücken schließen — kein neues Material mehr!</div><div class="tags"><span class="tag t-wdh">Übung</span></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="badge b-tag">Prüfungstag</span><span class="card-title">Tag 13: Entspannen & leichtes Durchgehen</span><span class="card-date">13. April</span></div>
+    <div class="topic"><div class="topic-name">Kein intensives Lernen mehr</div><div class="topic-detail">Nur Karteikarten / Mindmaps überfliegen · gut schlafen · alles einpacken</div><div class="tags"><span class="tag t-wdh">Vorbereitung</span></div></div>
+  </div>
+
+  <div class="tip"><strong>Optionale Themenfelder:</strong> Taktiktraining (5.2.3), Psychologisches Training (5.2.4), Planung & Steuerung (5.2.7) und Aggression & Gewalt (5.2.14) sind auf grundlegendem Niveau optional — trotzdem kurz parat haben, falls sie im Wahlbereich kommen!</div>
+</div>
+
+<!-- THEMENFELDER -->
+<div id="themen" class="view">
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Bewegungsanalyse (5.2.1)</span></div><div class="topic-detail">Kinematik/Dynamik · biomechan. Prinzipien · qualitative Merkmale · Fehleranalyse</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Bewegungslernen & Techniktraining (5.2.2)</span></div><div class="topic-detail">Phasen motorischen Lernens · Informationsverarbeitung · Regelkreis · NEUMAIER · Analysatoren</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-opt">Optional gN</span><span class="card-title">Grundlagen Taktiktraining (5.2.3)</span></div><div class="topic-detail">Komponenten, Methoden, langfristiger Trainingsaufbau im Spielsport</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-opt">Optional gN</span><span class="card-title">Psychologisches Training (5.2.4)</span></div><div class="topic-detail">Psychische Faktoren · mentale Trainingstechniken</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Grundlagen sportlichen Trainings (5.2.5)</span></div><div class="topic-detail">Kondition/Koordination · Belastungsnormativa · Trainingsprinzipien · Anforderungsprofile</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Anatomisch-physiologische Grundlagen (5.2.6)</span></div><div class="topic-detail">Skelettmuskulatur · Muskelfasern · Gelenke · HKL · Energiebereitstellung · Adaptation</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-opt">Optional gN</span><span class="card-title">Planung & Steuerung Training (5.2.7)</span></div><div class="topic-detail">Jahres-/Makro-/Mikrozyklus · Periodisierung · Trainingsaufbau</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Training konditionelle Fähigkeiten (5.2.8)</span></div><div class="topic-detail">Kraft, Ausdauer, Schnelligkeit, Beweglichkeit — je Methoden, Ziele, Tests, Adaptationen</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Training koordinative Fähigkeiten (5.2.9)</span></div><div class="topic-detail">Modell Meinel/Schnabel · Analysatoren · altersabhängige Trainierbarkeit</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Sport als gesellschaftl. Phänomen (5.2.10)</span></div><div class="topic-detail">Sportbegriff · Funktionen/Dysfunktionen · Kommerzialisierung · Institutionen · Berufsfeld</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Sport & Gesundheit (5.2.11)</span></div><div class="topic-detail">Verletzungen · Prävention/Regeneration · lebenslanges Gesundheitstraining</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Sport, Ernährung & Doping (5.2.12)</span></div><div class="topic-detail">Nährstoffe · Ernährungsplan · Substitution · Dopingdefinition · Wirkstoffe · Ethik</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-pflicht">Pflicht</span><span class="card-title">Motive sportlichen Handelns (5.2.13)</span></div><div class="topic-detail">Motiv vs. Motivation · Leistungsmotivationsmodell · Atkinson</div></div>
+  <div class="card"><div class="card-header"><span class="badge b-opt">Optional gN</span><span class="card-title">Aggression & Gewalt im Sport (5.2.14)</span></div><div class="topic-detail">Definitionen · Aggressionsmodelle · Formen, Ursachen, Lösungen</div></div>
+</div>
+
+<!-- CHECKLISTE -->
+<div id="checklist" class="view">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Lernfortschritt verfolgen</span></div>
+    <div id="cl"></div>
+    <div class="progress-bar"><div class="progress-fill" id="pf" style="width:0%"></div></div>
+    <div class="progress-text" id="pt">0 von 14 Themenfeldern abgehakt</div>
+  </div>
+</div>
+
+<script>
+const items = [
+  "Bewegungsanalyse (5.2.1)",
+  "Bewegungslernen & Techniktraining (5.2.2)",
+  "Grundlagen Taktiktraining (5.2.3) — optional",
+  "Psychologisches Training (5.2.4) — optional",
+  "Grundlagen sportlichen Trainings (5.2.5)",
+  "Anatomisch-physiolog. Grundlagen (5.2.6)",
+  "Planung & Steuerung Training (5.2.7) — optional",
+  "Training konditionelle Fähigkeiten (5.2.8)",
+  "Training koordinative Fähigkeiten (5.2.9)",
+  "Sport als gesellschaftl. Phänomen (5.2.10)",
+  "Sport & Gesundheit (5.2.11)",
+  "Sport, Ernährung & Doping (5.2.12)",
+  "Motive sportlichen Handelns (5.2.13)",
+  "Aggression & Gewalt im Sport (5.2.14) — optional"
+];
+const states = new Array(items.length).fill(false);
+const cl = document.getElementById('cl');
+items.forEach((txt, i) => {
+  const row = document.createElement('div');
+  row.className = 'check-row';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox'; cb.id = 'c' + i;
+  const lbl = document.createElement('label');
+  lbl.htmlFor = 'c' + i; lbl.textContent = txt;
+  cb.addEventListener('change', () => {
+    states[i] = cb.checked;
+    lbl.className = cb.checked ? 'done-label' : '';
+    const done = states.filter(Boolean).length;
+    document.getElementById('pf').style.width = Math.round(done/items.length*100) + '%';
+    document.getElementById('pt').textContent = done + ' von ' + items.length + ' Themenfeldern abgehakt';
+  });
+  row.appendChild(cb); row.appendChild(lbl); cl.appendChild(row);
+});
+
+function show(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
